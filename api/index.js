@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import userRouter from './routes/user.router.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,7 +22,16 @@ mongoose.connect(connectionString)
 // Start Express server
 function startServer() {
   const app = express();
+
   app.listen(3000, () => {
     console.log('Server is running on port 3000');
   });
+
+  // Define a route for the root path
+  app.get('/', (req, res) => {
+    res.send('Welcome to the MERN Real Estate API!');
+  });
+
+  // Define your /test route handler
+  app.use("/api/user", userRouter);
 }
