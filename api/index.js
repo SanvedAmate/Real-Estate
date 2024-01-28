@@ -8,9 +8,20 @@ dotenv.config();
 const password = process.env.MONGODB_PASSWORD;
 const connectionString = `mongodb+srv://sanved:${encodeURIComponent(password)}@mern-real-estate.hmj1fhr.mongodb.net/MERN-Real-Estate?retryWrites=true&w=majority`;
 
-mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(connectionString)
+  .then(() => {
+    console.log('Connected to MongoDB: MERN-Real-Estate');
+    startServer();
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error.message);
+    process.exit(1);
+  });
 
-const app = express();
-app.listen(3000, () => {
+// Start Express server
+function startServer() {
+  const app = express();
+  app.listen(3000, () => {
     console.log('Server is running on port 3000');
-});
+  });
+}
