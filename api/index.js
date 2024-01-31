@@ -1,15 +1,21 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import userRouter from './routes/user.router.js';
+import userRouter from './routes/user.route.js';
+import authRouter from './routes/auth.route.js';
 
 // Load environment variables from .env file
 dotenv.config();
 
-const password = process.env.MONGODB_PASSWORD;
-const connectionString = `mongodb+srv://sanved:${encodeURIComponent(password)}@mern-real-estate.hmj1fhr.mongodb.net/MERN-Real-Estate?retryWrites=true&w=majority`;
+// Check if MONGODB_CONNECTION_STRING is defined
+const mongoURI = process.env.MONGO;
 
-mongoose.connect(connectionString)
+if (!mongoURI) {
+  console.error('MongoDB connection string is not defined in the environment variables.');
+  process.exit(1);
+}
+
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB: MERN-Real-Estate');
     startServer();
@@ -23,6 +29,8 @@ mongoose.connect(connectionString)
 function startServer() {
   const app = express();
 
+  app.use(express.json());
+
   app.listen(3000, () => {
     console.log('Server is running on port 3000');
   });
@@ -34,4 +42,5 @@ function startServer() {
 
   // Define your /test route handler
   app.use("/api/user", userRouter);
+  app.use("/api/auth", authRouter);
 }
