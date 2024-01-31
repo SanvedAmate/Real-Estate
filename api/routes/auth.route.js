@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 router.post('/signup', (req, res) => {
-  // Log the request body
+  
   console.log('Received JSON data:', req.body);
 
   // Extract signup data from req.body
